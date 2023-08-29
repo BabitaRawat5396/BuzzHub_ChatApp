@@ -3,7 +3,7 @@ import { setNotification, setShowSideBar, setShowUserChat } from '../../../Slice
 import useOnClickOutside from '../../../Hooks/useOnClickOutside';
 import NotificationBadge from 'react-notification-badge';
 import { useDispatch, useSelector } from 'react-redux';
-import {Effect} from 'react-notification-badge';
+// import {Effect} from 'react-notification-badge';
 import {AiFillBell} from 'react-icons/ai';
 import { useRef, useState } from 'react';
 
@@ -23,10 +23,16 @@ const NotificationBell = () => {
   return (
     <div ref={notificationRef}>
       <div
-        className='cursor-pointer'
+        className='cursor-pointer relative'
         onClick={() => setShowNotificationBar(prev => !prev)}
         >
-        <NotificationBadge count={notification.length} effect={Effect.SCALE}/>
+        {/* <NotificationBadge count={notification.length} effect={Effect.SCALE}/> */}
+        {
+          notification.length > 0 && (
+          <span className='bg-red-500 text-white text-xs px-[0.3rem] rounded-full absolute left-[40%] top-0'>
+            {notification.length}
+          </span>
+        )}
         <AiFillBell 
           className='text-lg mr-2 text-white'
           />
