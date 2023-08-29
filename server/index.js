@@ -78,7 +78,7 @@ const server = app.listen(PORT, () => {
 const io = socket(server,{
 	pingTimeout: 60000, //It will wait for 60s after that it will close connectuon to save the bandwidth
 	cors:{
-		origin:"https://buzzhub-backend.onrender.com",
+		origin:"https://buzzhub-frontend.vercel.app",
 		credentials:true,
 	},
 });
