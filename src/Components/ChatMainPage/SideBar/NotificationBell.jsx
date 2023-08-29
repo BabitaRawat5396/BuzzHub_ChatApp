@@ -1,7 +1,6 @@
 
 import { setNotification, setShowSideBar, setShowUserChat } from '../../../Slices/userSlice';
 import useOnClickOutside from '../../../Hooks/useOnClickOutside';
-import NotificationBadge from 'react-notification-badge';
 import { useDispatch, useSelector } from 'react-redux';
 // import {Effect} from 'react-notification-badge';
 import {AiFillBell} from 'react-icons/ai';
