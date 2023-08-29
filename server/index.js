@@ -39,7 +39,7 @@ app.use(cookieParser());
 
 // using cors middleware for cross origin resource sharing between server port and frontend port
 app.use( cors({
-		origin:"http://localhost:3000",
+		origin:"https://buzzhub-frontend.vercel.app",
 		credentials:true,
 	})
 );
