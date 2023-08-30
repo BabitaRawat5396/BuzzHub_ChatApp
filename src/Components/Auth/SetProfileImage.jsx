@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {FaCameraRetro} from 'react-icons/fa';
 
 const SetProfileImage = ({register, setValue,setPreview,preview}) => {
-
+  
     const {user} = useSelector( (state) => state.profile);
 
     const [previewSource,setPreviewSource] = useState(null);
@@ -54,10 +54,10 @@ const SetProfileImage = ({register, setValue,setPreview,preview}) => {
       }
       
       <label 
-        className="bg-richblack-700 text-[#aaaeb3] text-sm rounded-lg cursor-pointer tracking-wide"
+        className="bg-richblack-700 text-[#aaaeb3] text-sm rounded-lg cursor-pointer tracking-wide whitespace-nowrap"
         >
         {
-          preview ? previewSource && "Uploaded Picture" : "Upload Profile Picture"
+          preview ? previewSource && " Uploaded Picture" : " Upload Profile Picture"
         }
         <input 
           type="file" 

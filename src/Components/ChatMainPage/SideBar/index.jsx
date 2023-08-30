@@ -50,6 +50,7 @@ const Sidebar = () => {
   const handleClick = async(item) =>{ 
     const response = await accessChat({userId:item._id},token);
     dispatch(setShowUserChat(response));
+    dispatch(setShowSideBar(false))
   }
 
   const handleSubmit = (event) => {
@@ -154,7 +155,6 @@ const Sidebar = () => {
           <div key={index} 
             className='mt-1 text-sm'
             onClick={() =>  {
-              // console.log("notification",notification)
               const updatedNotifications = notification.filter((notif) => notif.chat === item);
               dispatch(setNotification(updatedNotifications));
               dispatch(setShowUserChat(item));
@@ -170,7 +170,7 @@ const Sidebar = () => {
                   className='flex items-center gap-4 pt-2 w-full cursor-pointer'
                   >
                   <img
-                    src={GroupImage}
+                    src={item?.groupImage || GroupImage}
                     alt='avatar' 
                     className='object-cover w-9 rounded-full aspect-square'
                     />

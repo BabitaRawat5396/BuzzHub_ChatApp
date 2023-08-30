@@ -1,3 +1,4 @@
+const fileUpload = require("../utils/fileUploader");
 const Chat = require("../models/Chat");
 
 // Chats related API's
@@ -27,6 +28,7 @@ exports.accessChat = async(req,res) => {
       select: "userName email image",
     },
   });
+
   if(chat.length > 0){
     return res.status(200).json({
       success:true,
@@ -64,30 +66,45 @@ exports.accessChat = async(req,res) => {
 
 exports.fetchUserAllChats = async(req,res) => {
   try {
-    const userChat = await Chat.find({users:{$elemMatch:{$eq:req.user.id}}})
-      .populate("users","-password")
-      .populate("groupAdmin","-password")
-      .populate({
-        path: "latestMessage",
-        populate: {
-          path: "sender",
-          select: "userName email image",
-        },
-      })
-      .sort({updatedAt:-1});
-;
-
+    const userChat = await Chat.find({
+      users: { $elemMatch: { $eq: req.user.id } },
+    })
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password")
+    .populate("groupImage")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "userName email image",
+      },
+    })
+    .sort({ updatedAt: -1 });
+    
     if(!userChat){
       return res.status(404).json({
         success:false,
         message:"Unable to find user's chats"
       })
     }
+    // console.log("userChat",userChat)
+    const filteredUserChat = userChat.filter(chat => {
+      // Check if chat.latestMessage exists and is not null or undefined
+      if (chat.latestMessage) {
+        if (chat.isGroupChat) {
+          return !chat.deleteChatUsers.some(id => id.toString() === req.user.id.toString());
+        } else {
+          // Check if there is any ID in deleteChatUsers array other than req.user.id
+          return !chat.deleteChatUsers.some(id => id.toString() !== req.user.id.toString());
+        }
+      }
+      return false; // Exclude chats without latestMessage
+    });
     
     return res.status(200).json({
       success:true,
       message:"Fetched all user chats",
-      data:userChat
+      data:filteredUserChat
     });
 
   } catch (error) {
@@ -110,17 +127,33 @@ exports.deleteChat = async(req,res) => {
       })
     }
 
-    const chat = await Chat.findOneAndUpdate({
-      isGroupChat:isGroupChat,
-      $and:[
-        {users:{$elemMatch: {$eq: req.user.id}}},
-        {users:{$elemMatch: {$eq: userId}}},
-      ],
-    },
-    {
-      $push: { deleteChatUsers: userId },
-    },
-    { new: true })
+    var chat;
+    if(!isGroupChat){
+      chat = await Chat.findOneAndUpdate({
+        isGroupChat:isGroupChat,
+        $and:[
+          {users:{$elemMatch: {$eq: req.user.id}}},
+          {users:{$elemMatch: {$eq: userId}}},
+        ],
+      },
+      {
+        $push: { deleteChatUsers: userId },
+      },
+      { new: true })
+    }else{
+      chat = await Chat.findOneAndUpdate({
+        isGroupChat:isGroupChat,
+        $and:[
+          {users:{$elemMatch: {$eq: req.user.id}}},
+          {users:{$elemMatch: {$eq: userId}}},
+        ],
+      },
+      {
+        $push: { deleteChatUsers: req.user.id },
+      },
+      { new: true })
+    }
+    
 
     return res.status(200).json({
       success:true,
@@ -292,5 +325,67 @@ exports.removeFromGroup = async(req,res) => {
       message:"Unable to add user to the chat",
       data:added
     })
+  }
+}
+
+exports.updateGroupProfile = async(req,res) => {
+  try {
+    const {chatId} = req.body;
+    const displayPicture = req.files.profileImage;
+
+    if(!chatId){
+      return res.status(404).json({
+        success:false,
+        message:"All fields are required"
+      })
+    }
+
+    // Upload image to cloudinary
+    const image = await fileUpload.fileUploadToCloudinary(
+      displayPicture,
+      process.env.FOLDER_NAME,
+      1000,
+      1000
+    )
+
+    if(!image)
+    {
+      return res.status(500).send({
+        success: false,
+        message: `Could Not Upload the Image. Please try again.`
+      })
+    } 
+
+    const chat = await Chat.findByIdAndUpdate(chatId,{
+      groupImage:image.secure_url
+    },{new:true}).populate("users", "-password")
+    .populate("groupAdmin", "-password")
+    .populate("groupImage")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "userName email image",
+      },
+    });
+
+    if(!chat){
+      return res.status(500).send({
+        success: false,
+        message: `Could Not update group Image.`
+      })
+    } 
+
+    return res.status(200).json({
+      success:true,
+      message:"groupImage has sucessfully updated",
+      data:chat
+    })
+  } catch (error) {
+    return res.status(500).json({
+			success: false,
+			message: "Unable to update groupImage. Please try again.",
+      error:error.message,
+		});
   }
 }

@@ -5,6 +5,9 @@ module.exports = {
   ],
   theme: {
     screens: {
+      'tablet-xs':'430px',
+      'tablet-sm':'500px',
+      'tablet-sm-more':'600px',
       'tablet': '768px',
       'tablet-md':'885px',
       'laptop': '1024px',

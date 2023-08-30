@@ -10,7 +10,8 @@ const {
   RENAME_GROUP_API,
   ADD_TO_GROUP_API,
   REMOVE_FROM_GROUP_API,
-  DELETE_CHAT_API
+  DELETE_CHAT_API,
+  UPDATE_GROUP_PROFILE_API
 } = chatEndPoints;
 
 export const accessChat = async(userId,token) => {
@@ -90,4 +91,23 @@ export function createGroupChat(data,token){
       
     }
   }
+}
+
+export const updateGroupProfile = async(data,token) => {
+  let user=[];
+  try {
+    const response = await apiConnector("POST",UPDATE_GROUP_PROFILE_API,data,{
+      Authorization:`Bearer ${token}`
+    })
+    console.log("heloo")
+    if(!response.data.success){
+      throw new Error(response.data.message)
+    }
+    console.log("UPDATE_GROUP_PROFILE_API RESPONSE",response);
+    user = response.data.data;
+  } catch (error) {
+    console.log("UPDATE_GROUP_PROFILE_API ERROR",error)
+  }
+
+  return user;
 }

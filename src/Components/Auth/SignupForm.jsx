@@ -27,6 +27,7 @@ const SignupForm = ({setIsSignUpMode}) => {
     });
     setPreview(false);
   }
+  
   useEffect(() => {
     if(isSubmitSuccessful){
       reset({

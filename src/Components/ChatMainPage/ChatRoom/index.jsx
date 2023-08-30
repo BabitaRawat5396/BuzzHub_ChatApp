@@ -2,22 +2,22 @@
 import { addMessage, getAllMessages } from '../../../Services/Operations/MessageAPI';
 import { setNotification, setRefreshSideBar } from '../../../Slices/userSlice';
 import ChatRoomBackground from '../../../Assets/ChatRoomBackground.jpg';
+import useOnClickOutside from '../../../Hooks/useOnClickOutside';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
+import ChatHeading from '../ChatRoom/ChatHeading';
 import { BsEmojiSmile } from 'react-icons/bs';
 import MessageStartPage from './NoMessage';
 import {VscSend} from 'react-icons/vsc';
-import ChatHeading from '../ChatRoom/ChatHeading';
 import MessageBody from './MessageBody';
 import Picker from '@emoji-mart/react';
 import io from 'socket.io-client';
 import data from '@emoji-mart/data';
-import useOnClickOutside from '../../../Hooks/useOnClickOutside';
-
+import ContactInfo from './ChatHeading/ContactInfo';
 
 const ChatRoom = () => {
 
-  const { showUserChat, user, notification } = useSelector((state) => state.profile);
+  const { showUserChat, user, notification, showContactInfo } = useSelector((state) => state.profile);
   const [showEmojiPalette, setShowEmojiPalette] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
   const {token}  = useSelector((state) => state.auth);
@@ -99,7 +99,7 @@ const ChatRoom = () => {
   },[showUserChat]);
 
   useEffect(() => {
-    socket.current = io("https://buzzhub-backend.onrender.com");
+    socket.current = io("http://localhost:4000");
     socket.current.emit("setup",user);
     socket.current.on("connected",() => setSocketConnected(true));
     socket.current.on("typing",() => setIsTyping(true));
@@ -123,57 +123,59 @@ const ChatRoom = () => {
   }, [])
   
   return (
-    <div className='h-full'>
-      {showUserChat ? (
-        <div className='h-full grid grid-rows-[11.5%,77%,11.5%] '>
+    <div className='h-full w-full bg-[#f0f0f0] '>
+      {
+        showUserChat ? (showContactInfo ? <ContactInfo/> : (
+          <div className='h-full grid grid-rows-[11.5%,77%,11.5%] '>
 
-          {/* Chat Heading Section*/}
-          <ChatHeading isTyping={isTyping}/>
+            {/* Chat Heading Section*/}
+            <ChatHeading isTyping={isTyping}/>
 
-          {/* Chat Messages Section */}
-          <div className='bg-[#f8f8f8] overflow-y-auto'
-            style={{ 
-              backgroundImage: `url(${ChatRoomBackground})`, 
-              backgroundSize: '40%',
-              backgroundRepeat: 'no-repeat', 
-              backgroundPosition: 'center bottom',
-            }}>
-            <MessageBody allMessages={allMessages} typing={typing}/>
-          </div>
-          
-          {/* Chat Input Section */}
-          <div className='w-full flex items-center gap-3 px-4 bg-[#91819e] py-2'>
-            <div className='relative' ref={emojiRef}>
-              <BsEmojiSmile 
-                onClick={handleShowEmoji} 
-                className=' text-2xl text-[#eee2e2] rounded-full inline-flex justify-center items-center cursor-pointer'
-                />
-                <div>
-                {
-                  showEmojiPalette && (
-                    <div className='absolute bottom-10' style={{ maxHeight:'365px', overflow: 'auto' }}>
-                      <Picker data={data} onEmojiSelect={handleEmojiClick} />
-                    </div>
-                  )
-                }
-              </div>
+            {/* Chat Messages Section */}
+            <div className='bg-[#f8f8f8] overflow-y-auto'
+              style={{ 
+                backgroundImage: `url(${ChatRoomBackground})`, 
+                backgroundSize: '40%',
+                backgroundRepeat: 'no-repeat', 
+                backgroundPosition: 'center bottom',
+              }}>
+              <MessageBody allMessages={allMessages} typing={typing}/>
             </div>
-            <form onSubmit={handleSendMessage} className='w-full contents '>
-              <input 
-                type='text' 
-                placeholder='Type your message here...' 
-                className=' py-2 bg-transparent w-full outline-none border px-4 bg-white rounded-xl text-sm'
-                value={message}
-                onChange={typingHandler}
-                />
-              <button type='submit'> <VscSend className='text-2xl text-white rounded-full'/> </button>
-            </form>
             
+            {/* Chat Input Section */}
+            <div className='w-full flex items-center gap-3 px-4 bg-[#91819e] py-2'>
+              <div className='relative' ref={emojiRef}>
+                <BsEmojiSmile 
+                  onClick={handleShowEmoji} 
+                  className=' text-2xl text-[#eee2e2] rounded-full inline-flex justify-center items-center cursor-pointer'
+                  />
+                  <div>
+                  {
+                    showEmojiPalette && (
+                      <div className='absolute bottom-10' style={{ maxHeight:'365px', overflow: 'auto' }}>
+                        <Picker data={data} onEmojiSelect={handleEmojiClick} />
+                      </div>
+                    )
+                  }
+                </div>
+              </div>
+              <form onSubmit={handleSendMessage} className='w-full contents '>
+                <input 
+                  type='text' 
+                  placeholder='Type your message here...' 
+                  className=' py-2 bg-transparent w-full outline-none border px-4 bg-white rounded-xl text-sm'
+                  value={message}
+                  onChange={typingHandler}
+                  />
+                <button type='submit'> <VscSend className='text-2xl text-white rounded-full'/> </button>
+              </form>
+              
+            </div>
           </div>
-        </div>
-      ) : (
-        <MessageStartPage/>
-      )}
+        )) : (
+          <MessageStartPage/>
+        )
+      }
     </div>
   );
 };

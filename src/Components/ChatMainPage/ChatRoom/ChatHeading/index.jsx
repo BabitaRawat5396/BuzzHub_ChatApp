@@ -40,8 +40,8 @@ const ChatHeading = ({isTyping}) => {
               )
             }
             <img
-              src={GroupImage} 
-              alt='avatar' 
+              src={ showUserChat?.groupImage || GroupImage} 
+              alt='Group Image' 
               className='object-cover w-9 rounded-full aspect-square'
               />
             <div>

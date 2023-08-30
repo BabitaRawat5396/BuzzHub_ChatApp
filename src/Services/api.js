@@ -25,6 +25,7 @@ export const chatEndPoints = {
   FETCH_USER_ALL_CHATS_API : BASE_URL + "/chat/fetchUserAllChats",
   CREATE_GROUP_CHAT_API : BASE_URL + "/chat/createGroupChat",
   RENAME_GROUP_API : BASE_URL + "/chat/renameGroup",
-  ADD_TO_GROUP_API : BASE_URL + "chat/addTogroup",
-  REMOVE_FROM_GROUP_API : BASE_URL + "chat/removeFromGroup",
+  ADD_TO_GROUP_API : BASE_URL + "/chat/addTogroup",
+  REMOVE_FROM_GROUP_API : BASE_URL + "/chat/removeFromGroup",
+  UPDATE_GROUP_PROFILE_API : BASE_URL + "/chat/updateGroupProfile",
 }

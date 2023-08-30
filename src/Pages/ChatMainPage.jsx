@@ -12,7 +12,7 @@ const ChatMainPage = () => {
   return (
     <div className='min-h-screen flex w-full bg-[#f0f2f5] bg-opacity-30'>
       {
-        windowSize.width < 426 ? (
+        windowSize.width < 427 ? (
           !showUserChat ? (
             <div className='bg-[#7c799a] w-full'>
               <Sidebar/> 
@@ -25,19 +25,19 @@ const ChatMainPage = () => {
         ) : (
           windowSize.width > 426 && windowSize.width < 769 ? (
           <>
-          <div className={`overflow-auto absolute top-0 bottom-0 left-0 z-10 bg-[#7c799a] w-[320px] ${showSideBar ? "" : "hidden"}`}>
-            <Sidebar/>
-          </div>
-          <div className='w-full h-screen overflow-hidden'>
-            <ChatRoom/>
-          </div>
+            <div className={`overflow-auto absolute top-0 bottom-0 left-0 z-10 bg-[#7c799a] w-[320px] ${showSideBar ? "" : "hidden"}`}>
+              <Sidebar/>
+            </div>
+            <div className='w-full h-screen overflow-auto'>
+              <ChatRoom/>
+            </div>
           </>
         ) : (
-          <div className='flex w-full h-screen'>
+          <div className='flex w-full h-screen '>
             <div className='tablet:w-[70%] tablet-md:w-[60%] laptop:w-[50%] laptop-md:w-[40%] bg-[#7c799a] overflow-auto'>
               <Sidebar/>
             </div>
-            <div className='w-full'>
+            <div className='w-full h-screen overflow-auto '>
               <ChatRoom/>
             </div>
           </div>

@@ -39,9 +39,9 @@ app.use(cookieParser());
 
 // using cors middleware for cross origin resource sharing between server port and frontend port
 app.use( cors({
-		origin:"https://buzzhub-frontend.vercel.app",
-		credentials:true,
-	})
+	origin:"http://localhost:3000",
+	credentials:true,
+})
 );
 
 // middleware for uploading using temp file
@@ -78,7 +78,7 @@ const server = app.listen(PORT, () => {
 const io = socket(server,{
 	pingTimeout: 60000, //It will wait for 60s after that it will close connectuon to save the bandwidth
 	cors:{
-		origin:"https://buzzhub-frontend.vercel.app",
+		origin:"http://localhost:3000",
 		credentials:true,
 	},
 });

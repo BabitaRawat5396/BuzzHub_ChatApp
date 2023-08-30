@@ -7,7 +7,8 @@ const chatSchema = mongoose.Schema(
     users:[{type:mongoose.Schema.Types.ObjectId, ref:"User"},],
     latestMessage:{type:mongoose.Schema.Types.ObjectId,ref:"Message"},
     groupAdmin:{type:mongoose.Schema.Types.ObjectId,ref:"User"},
-    deleteChatUsers:[{type:mongoose.Schema.Types.ObjectId, ref:"User"},]
+    deleteChatUsers:[{type:mongoose.Schema.Types.ObjectId, ref:"User"},],
+    groupImage:{type:String},
   },
   {timestamps:true}
 );
