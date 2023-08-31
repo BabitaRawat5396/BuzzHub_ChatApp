@@ -1,10 +1,8 @@
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {FaCameraRetro} from 'react-icons/fa';
 
 const SetProfileImage = ({register, setValue,setPreview,preview}) => {
   
-    const {user} = useSelector( (state) => state.profile);
 
     const [previewSource,setPreviewSource] = useState(null);
     const [file,setFile] = useState(null);

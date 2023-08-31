@@ -1,6 +1,6 @@
 
 import { addMessage, getAllMessages } from '../../../Services/Operations/MessageAPI';
-import { setNotification, setRefreshSideBar } from '../../../Slices/userSlice';
+import { setNotification, setRefreshSideBar, setShowSideBar } from '../../../Slices/userSlice';
 import ChatRoomBackground from '../../../Assets/ChatRoomBackground.jpg';
 import useOnClickOutside from '../../../Hooks/useOnClickOutside';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,7 +29,6 @@ const ChatRoom = () => {
   const emojiRef = useRef();
   const dispatch = useDispatch();
   const socket = useRef();
-
 
   const handleShowEmoji = () => {
     setShowEmojiPalette(!showEmojiPalette);
@@ -91,6 +90,7 @@ const ChatRoom = () => {
     setShowEmojiPalette(false);
   });
 
+  
   useEffect(() => {
     if(showUserChat){
       fetchAllMessages();
@@ -121,6 +121,7 @@ const ChatRoom = () => {
       }
     })
   }, [])
+
   
   return (
     <div className='h-full w-full bg-[#f0f0f0] '>

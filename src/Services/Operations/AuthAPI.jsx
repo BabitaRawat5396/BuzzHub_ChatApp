@@ -3,6 +3,7 @@ import { setUser } from "../../Slices/userSlice";
 import { apiConnector } from "../apiConnector";
 import { toast } from "react-hot-toast";
 import { authEndPoints } from "../api";
+import { setToken } from "../../Slices/authSlice";
 
 const {
   SIGNIN_API,
@@ -30,7 +31,7 @@ export function signUp(data) {
   }
 }
 
-export function logIn(data) {
+export function logIn(data,navigate) {
   return async (dispatch) => {
     // dispatch(setLoading(true))
     try {
@@ -41,12 +42,13 @@ export function logIn(data) {
       if (!response.data.success) {
         throw new Error(response.data.message);
       }
-
+      dispatch(setToken(response.data.token))
       dispatch(setUser(response.data.user));
       localStorage.setItem("token", JSON.stringify(response.data.token))
       localStorage.setItem("user", JSON.stringify(response.data.user))
 
       toast.success("Login Successful");
+      navigate("/chat");
     } catch (error) {
       console.log("LOGIN API ERROR............", error);
       toast.error("LOGIN Failed");

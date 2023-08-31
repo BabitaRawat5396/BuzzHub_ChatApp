@@ -1,7 +1,7 @@
 const express = require("express");
-const { getProfile } = require("../controllers/Profile");
+const { changeProfilePicture } = require("../controllers/Profile");
 const router = express.Router();
 
-router.post("/getProfiles",getProfile);
+router.post("/changeProfilePicture",changeProfilePicture);
 
 module.exports = router;

@@ -7,6 +7,7 @@ const initialState = {
   showSideBar:true,
   refreshSideBar:null,
   showContactInfo:false,
+  showUserProfile:false
 }
 
 const userSlice = createSlice({
@@ -30,12 +31,15 @@ const userSlice = createSlice({
     },
     setShowContactInfo(state,value){
       state.showContactInfo = value.payload;
+    },
+    setShowUserProfile(state,value){
+      state.showUserProfile = value.payload;
     }
   }
 });
 
 
-export const { setUser, setShowContactInfo, setShowUserChat, setNotification, setShowSideBar, setRefreshSideBar } = userSlice.actions;
+export const { setUser, setShowContactInfo, setShowUserChat, setNotification, setShowSideBar, setRefreshSideBar, setShowUserProfile } = userSlice.actions;
 
 export default userSlice.reducer;
 

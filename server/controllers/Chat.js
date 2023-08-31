@@ -237,9 +237,26 @@ exports.renameGroup = async(req,res) => {
   try {
     const {chatId, name} = req.body;
 
+    if(!chatId || !name){
+      return res.status(404).json({
+        success:false,
+        message:"All fields are required"
+      })
+    }
     const updatedChat = await Chat.findByIdAndUpdate(chatId,{
       chatName:name,
-    },{new:true}).populate("users","-password").populate("groupAdmin","-password");
+    },{new:true})
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password")
+    .populate("groupImage")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "userName email image",
+      },
+    })
+    .sort({ updatedAt: -1 });
 
     if(!updatedChat){
       return res.status(404).json({
@@ -266,14 +283,39 @@ exports.renameGroup = async(req,res) => {
 
 exports.addTogroup = async(req,res) => {
   try {
-    const {chatId, userId} = req.body;
+    const {chatId,users} = req.body;
+
+    var usersArray = JSON.parse(users);
+
+    const existedGroup = await Chat.findOne({
+      _id:chatId,
+      users: {
+        $all: usersArray // Replace with the array of user IDs you want to match
+      }
+    })
+
+    if (existedGroup) {
+      return res.status(400).json({
+        success: false,
+        message: "Users already exists",
+      });
+    }
 
     const added = await Chat.findByIdAndUpdate(chatId,{
-      $push:{users:userId}
+      $push:{users:usersArray}
       },
       {new: true})
-      .populate("users","-password")
-      .populate("groupAdmin","-password");
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
+      .populate("groupImage")
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: "userName email image",
+        },
+      })
+      .sort({ updatedAt: -1 });
 
     if(!added){
       return res.status(404).json({
@@ -304,8 +346,17 @@ exports.removeFromGroup = async(req,res) => {
       $pull:{users:userId}
       },
       {new: true})
-      .populate("users","-password")
-      .populate("groupAdmin","-password");
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
+      .populate("groupImage")
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: "userName email image",
+        },
+      })
+      .sort({ updatedAt: -1 });
 
     if(!added){
       return res.status(404).json({

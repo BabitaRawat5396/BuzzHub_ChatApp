@@ -534,21 +534,21 @@ form.sign-in-form {
 
 
 /* Width and height of the scrollbar track */
-/* ::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 7px;
-  height: 0px; */
-
-/* } */
+  height: 0px;
+ }
 
 /* Background color of the scrollbar track */
 ::-webkit-scrollbar-track {
   opacity: 0.5;
+  background-color: transparent;
 }
 
 /* Color of the scrollbar handle */
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-	background-color: transparent;
+	background-color: #7c799a;
 }
 
 /* Color on hover or active state of the scrollbar handle */

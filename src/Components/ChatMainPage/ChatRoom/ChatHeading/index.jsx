@@ -8,6 +8,7 @@ import {MdArrowBackIos} from 'react-icons/md';
 import {BiSearchAlt2} from 'react-icons/bi';
 import { useState } from 'react';
 import ProfileInfo from './ProfileInfo';
+import { ThreeDots } from 'react-loader-spinner';
 
 
 const ChatHeading = ({isTyping}) => {
@@ -48,7 +49,16 @@ const ChatHeading = ({isTyping}) => {
               <p className='text-white text-sm'>{showUserChat?.chatName}</p>
               {
                 isTyping ? (
-                  <p className='text-xs text-white'>typing...</p>
+                  <ThreeDots 
+                    height="80" 
+                    width="80" 
+                    radius="9"
+                    color="#4fa94d" 
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClassName=""
+                    visible={true}
+                    />
                 ) : (
                   <></>
                 )

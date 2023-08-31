@@ -13,10 +13,9 @@ const LoginForm = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async(data) => {
-    dispatch(logIn(data)).then(()=>{
-      navigate("/chat");
-    });
+    dispatch(logIn(data,navigate));
   }
+  
   useEffect(() => {
     if(isSubmitSuccessful){
       reset({

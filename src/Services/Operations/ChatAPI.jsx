@@ -93,13 +93,34 @@ export function createGroupChat(data,token){
   }
 }
 
+export const renameGroup = async(data,token) => {
+  let user;
+  try {
+    const response = await apiConnector("PUT",RENAME_GROUP_API,data,{
+      Authorization:`Bearer ${token}`
+    })
+
+    // console.log("RENAME_GROUP_API RESPONSE",response);
+
+    if(!response.data.success){
+      throw new Error(response.data.message);
+    }
+
+    user = response.data.data;
+  } catch (error) {
+    console.log("RENAME_GROUP_API ERROR",error);
+  }
+
+  return user;
+}
+
 export const updateGroupProfile = async(data,token) => {
   let user=[];
   try {
     const response = await apiConnector("POST",UPDATE_GROUP_PROFILE_API,data,{
       Authorization:`Bearer ${token}`
     })
-    console.log("heloo")
+    
     if(!response.data.success){
       throw new Error(response.data.message)
     }
@@ -107,6 +128,46 @@ export const updateGroupProfile = async(data,token) => {
     user = response.data.data;
   } catch (error) {
     console.log("UPDATE_GROUP_PROFILE_API ERROR",error)
+  }
+
+  return user;
+}
+
+export const addToGroup = async(data,token) => {
+  let user;
+  try {
+    const response = await apiConnector("PUT",ADD_TO_GROUP_API,data,{
+      Authorization:`Bearer ${token}`
+    })
+
+    if(!response.data.success){
+      throw new Error(response.data.message)
+    }
+
+    console.log("ADD_TO_GROUP_API RESPONSE",response);
+    user = response.data.data;
+  } catch (error) {
+    console.log("ADD_TO_GROUP_API ERROR",error);
+  }
+
+  return user;
+}
+
+export const removeFromGroup = async(data,token) => {
+  let user;
+  try {
+    const response = await apiConnector("PUT",REMOVE_FROM_GROUP_API,data,{
+      Authorization:`Bearer ${token}`
+    })
+
+    if(!response.data.success){
+      throw new Error(response.data.message)
+    }
+
+    console.log("REMOVE_FROM_GROUP_API RESPONSE",response);
+    user = response.data.data;
+  } catch (error) {
+    console.log("REMOVE_FROM_GROUP_API ERROR",error);
   }
 
   return user;

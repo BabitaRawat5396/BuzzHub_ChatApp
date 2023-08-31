@@ -1,9 +1,10 @@
 import { searchEndPoints } from "../api"
 import { apiConnector } from "../apiConnector"
 import { profileEndPoints } from "../api";
+import { setUser } from "../../Slices/userSlice";
 
 const {
-  GET_PROFILES_API
+  CHANGE_PROFILE_PICTURE_API
 } = profileEndPoints;
 
 const {
@@ -27,20 +28,22 @@ export const search = async(value) => {
   return data;
 }
 
-
-export const getProfiles = async() => {
-  let data=[];
+export const changeProfilePicture = async(data,dispatch) => {
+  let user;
   try {
-    const response = await apiConnector("POST",GET_PROFILES_API);
+    const response = await apiConnector("POST",CHANGE_PROFILE_PICTURE_API,data);
 
     if(!response.data.success){
       throw new Error(response.data.message);
     }
-    console.log("GET_PROFILES_API RESPONSE",response);
-    data = response.data.response;
+    // console.log("CHANGE_PROFILE_PICTURE_API RESPONSE",response);
+    dispatch(setUser(response.data.data));
+    localStorage.setItem("user", JSON.stringify(response.data.user))
+    user = response.data.data;
 
   } catch (error) {
-    console.log("GET_PROFILES_API ERROR",error);
+    console.log("CHANGE_PROFILE_PICTURE_API ERROR",error);
   }
-  return data;
+  return user;
 }
+

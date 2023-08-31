@@ -10,7 +10,7 @@ export const searchEndPoints = {
 }
 
 export const profileEndPoints = {
-  GET_PROFILES_API : BASE_URL + "/profile/getProfiles"
+  CHANGE_PROFILE_PICTURE_API: BASE_URL + "/profile/changeProfilePicture"
 }
 
 export const messageEndPoints = {

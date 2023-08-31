@@ -1,13 +1,13 @@
 
 
-import { accessChat, fetchUsersAllChats } from '../../../Services/Operations/ChatAPI';
-import { setNotification, setRefreshSideBar, setShowSideBar, setShowUserChat } from '../../../Slices/userSlice';
+import {setShowSideBar, setShowUserChat, setShowUserProfile } from '../../../Slices/userSlice';
+import { accessChat } from '../../../Services/Operations/ChatAPI';
 import { search } from '../../../Services/Operations/ProfileAPI';
-import { formatTimestamp } from '../../../utils/TimeConversion';
+import useOnClickOutside from '../../../Hooks/useOnClickOutside';
 import { useDispatch, useSelector } from 'react-redux';
 import useWindowSize from '../../../Hooks/windowSize';
 import {VscLayoutSidebarRight} from 'react-icons/vsc';
-import GroupImage from '../../../Assets/GroupImage.png';
+import UsersDisplay from '../../Common/UsersDisplay';
 import { useEffect, useRef, useState } from 'react';
 import NotificationBell from './NotificationBell';
 import {MdOutlineGroupAdd} from 'react-icons/md';
@@ -15,21 +15,25 @@ import CreateGroup from '../Group/CreateGroup';
 import { useNavigate } from 'react-router-dom';
 import {FiLogOut} from 'react-icons/fi';
 import {ImSearch} from 'react-icons/im';
+import {ImCross} from 'react-icons/im';
+import ContactInfo from '../ChatRoom/ChatHeading/ContactInfo';
+
+
 
 
 const Sidebar = () => {
   
-  const {user, refreshSideBar, notification} = useSelector((state) => state.profile);
+  const {user, showUserProfile} = useSelector((state) => state.profile);
   const [showCreateGroup,setShowCreateGroup] = useState(false);
   const [searchedUsers,setSearchedUsers] = useState([]);
   const {token} = useSelector((state) => state.auth);
   const [searchValue,setSearchValue] = useState("");
-  const [showList, setShowList] = useState(false);
-  const [users, setUsers] = useState([]);
   const windowSize = useWindowSize();
   const searchResultsRef = useRef(); 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const outsideSideBarClick = useRef();
+  const [showFullImage, setShowFullImage] = useState(false);
 
 
   const fetchSearchedData = async(value) => {
@@ -40,11 +44,6 @@ const Sidebar = () => {
   const handleChange = (value) => {
     setSearchValue(value);
     fetchSearchedData(value);
-  }
-
-  const fetchProfiles = async() => {
-    const response = await fetchUsersAllChats(token);
-    setUsers(response);
   }
 
   const handleClick = async(item) =>{ 
@@ -70,13 +69,8 @@ const Sidebar = () => {
     navigate("/");
   }
 
-  useEffect(() => {
-    
-    fetchProfiles();
-  },[refreshSideBar])
 
   useEffect(() => {
-    fetchProfiles();
     document.addEventListener('click', handleClickOutside);
 
     return () => {
@@ -85,17 +79,21 @@ const Sidebar = () => {
 
   },[])
 
+  useOnClickOutside(outsideSideBarClick,() => {
+    dispatch(setShowSideBar(false));
+  })
+
   return (
   <>
-    <div className='flex flex-col items-center justify-center'>
+    <div className='flex flex-col items-center justify-center'  ref={outsideSideBarClick}>
       <div className='flex items-center justify-between w-full px-4 border-b border-white border-opacity-20'>
         <div className='flex items-center whitespace-nowrap text-lg font-bold w-full p-2'>
           <img
             src={user?.profileImage} 
             alt='avatar' 
             className='object-cover w-9 rounded-full aspect-square'
+            onClick={() => dispatch(setShowUserProfile(true))}
             />
-          {/* <p className='text-white text-sm'>{user?.userName}</p> */}
         </div>
         <NotificationBell/>
         <MdOutlineGroupAdd className='text-2xl text-white cursor-pointer' onClick={() => {setShowCreateGroup((prev) => !prev)}}/>
@@ -110,7 +108,6 @@ const Sidebar = () => {
         <FiLogOut 
           className='text-2xl text-white cursor-pointer ml-2'
           onClick={() => {
-            setShowList((prev) => !prev)
             logout();
           }}
           />
@@ -149,67 +146,14 @@ const Sidebar = () => {
       </div>
 
       {/* Sidebar Chats */}
-      <div className='w-full my-2 px-4'>
-      {
-        users && users.map((item,index) => (
-          <div key={index} 
-            className='mt-1 text-sm'
-            onClick={() =>  {
-              const updatedNotifications = notification.filter((notif) => notif.chat === item);
-              dispatch(setNotification(updatedNotifications));
-              dispatch(setShowUserChat(item));
-              if(windowSize.width < 768){
-                dispatch(setShowSideBar(false))
-              }
-            }}>
-            {
-              item.userName !== user.userName && 
-              (
-                item.isGroupChat ? (
-                <div
-                  className='flex items-center gap-4 pt-2 w-full cursor-pointer'
-                  >
-                  <img
-                    src={item?.groupImage || GroupImage}
-                    alt='avatar' 
-                    className='object-cover w-9 rounded-full aspect-square'
-                    />
-                  <div className={`w-full ${index !== users.length -1 ? "border-b border-white border-opacity-20 pb-3" : ""}`}>
-                    <div className='flex justify-between items-center'>
-                      <p className='text-white'>{item?.chatName}</p>
-                      <p className='whitespace-nowrap text-xs text-slate-600'>{item?.latestMessage?.createdAt && formatTimestamp(item?.latestMessage?.createdAt)}</p>
-                    </div>
-                    <p className='text-xs text-slate-600'><span className=' font-bold text-slate-700'>{item?.latestMessage?.sender?.userName}</span>: {item?.latestMessage?.content}</p>
-
-                  </div>
-                </div>
-              ) : (
-                <div 
-                  className='flex items-center gap-4 pt-2 w-full cursor-pointer'
-                  >
-                  <img
-                    src={item?.users[0]?._id === user._id ? item?.users[1]?.profileImage  : item?.users[0]?.profileImage} 
-                    alt='avatar' 
-                    className='object-cover w-9 rounded-full aspect-square'
-                    />
-                  <div className={`w-full ${index !== users.length -1 ? "border-b border-white border-opacity-20 pb-3" : ""}`}>
-                    <div className='flex justify-between items-center'>
-                      <p className=' whitespace-nowrap text-white'>{item?.users[0]._id === user._id ? item?.users[1]?.userName  : item?.users[0]?.userName }</p>
-                      <p className='whitespace-nowrap text-xs text-slate-600'>{item?.latestMessage?.createdAt && formatTimestamp(item?.latestMessage?.createdAt)}</p>
-                    </div>
-                    <p className='text-xs text-slate-600'>{item?.latestMessage?.content}</p>
-                  </div>
-                </div>
-              )
-              )
-            }
-            
-          </div>
-        ))
-      }
-      </div>
+      <UsersDisplay/>
     </div>
     {showCreateGroup && <CreateGroup setShowCreateGroup={setShowCreateGroup}/>}
+    {showUserProfile &&  
+      <div className='fixed inset-0 z-[1000] !mt-0 grid place-items-center overflow-auto'>
+        <ContactInfo/>
+      </div>
+    }
   </>
     
     
