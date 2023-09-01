@@ -16,7 +16,7 @@ const MessageBody = ({allMessages}) => {
     <div className='flex flex-col'>
     {
       allMessages && allMessages.map((message, index) => (
-        <div key={index} ref={scrollRef} className={`my-1 ${message.sender._id === user._id ? 'ml-auto' : 'mr-auto'}`}>
+        <div key={index} ref={scrollRef} className={`m-[0.1rem] mx-[0.5rem] w-[55%] ${message.sender._id === user._id ? 'ml-auto flex place-content-end' : 'mr-auto'}`}>
           <div className='flex'>
             {
               message.sender._id !== user._id && isLastMessage(allMessages,message ,index) ? (
@@ -26,9 +26,8 @@ const MessageBody = ({allMessages}) => {
                 </div> ) : (
                 <div className='w-11'></div>)
             }
-            <div className={` text-xs px-3 py-2 rounded-2xl ${ message.sender._id === user._id ? 'bg-[#7c799a] text-white': 'bg-slate-700 text-white'}`}>
+            <div className={`text-xs px-3 py-2 rounded-2xl ${ message.sender._id === user._id ? 'bg-[#7c799a] text-white': 'bg-slate-700 text-white'}`}>
               <p>{message.content}</p>
-
             </div>
           </div>
         </div>)

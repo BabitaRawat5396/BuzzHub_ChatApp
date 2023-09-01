@@ -12,13 +12,13 @@ const {
 } = authEndPoints;
 
 
-export function signUp(data,dispatch) {
-  return async () => {
+export function signUp(data) {
+  return async (dispatch) => {
     dispatch(setLoading(true))
     try {
       const response = await apiConnector("POST", SIGNUP_API,data);
 
-      console.log("SIGNUP API RESPONSE............", response)
+      // console.log("SIGNUP API RESPONSE............", response)
 
       if (!response.data.success) {
         throw new Error(response.data.message)
@@ -32,13 +32,14 @@ export function signUp(data,dispatch) {
   }
 }
 
-export function logIn(data,navigate,dispatch) {
-  return async () => {
+export function logIn(data,navigate) {
+  return async(dispatch) => {
     dispatch(setLoading(true))
+    
     try {
       const response = await apiConnector("POST", SIGNIN_API,data);
 
-      console.log("LOGIN API RESPONSE............", response);
+      // console.log("LOGIN API RESPONSE............", response);
 
       if (!response.data.success) {
         throw new Error(response.data.message);

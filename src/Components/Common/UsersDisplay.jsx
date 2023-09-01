@@ -1,5 +1,5 @@
 
-import { setNotification, setShowSideBar, setShowUserChat } from '../../Slices/userSlice';
+import { setLoading, setNotification, setShowSideBar, setShowUserChat } from '../../Slices/userSlice';
 import { fetchUsersAllChats } from '../../Services/Operations/ChatAPI';
 import { formatTimestamp } from '../../utils/TimeConversion';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,8 +27,11 @@ const UsersDisplay = () => {
   },[refreshSideBar])
 
   useEffect(() => {
+    dispatch(setLoading(true));
     
     fetchProfiles();
+    dispatch(setLoading(false))
+
   },[]);
 
   const truncateWords = (text, maxWords) => {

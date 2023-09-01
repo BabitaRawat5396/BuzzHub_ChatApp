@@ -1,6 +1,6 @@
 
 import { addMessage, getAllMessages } from '../../../Services/Operations/MessageAPI';
-import { setNotification, setRefreshSideBar, setShowSideBar } from '../../../Slices/userSlice';
+import { setLoading, setNotification, setRefreshSideBar, setShowSideBar } from '../../../Slices/userSlice';
 import ChatRoomBackground from '../../../Assets/ChatRoomBackground.jpg';
 import useOnClickOutside from '../../../Hooks/useOnClickOutside';
 import { useDispatch, useSelector } from 'react-redux';
@@ -93,7 +93,9 @@ const ChatRoom = () => {
   
   useEffect(() => {
     if(showUserChat){
+      dispatch(setLoading(true));
       fetchAllMessages();
+      dispatch(setLoading(false));
     }
     selectedChatCompare.current = showUserChat;
   },[showUserChat]);

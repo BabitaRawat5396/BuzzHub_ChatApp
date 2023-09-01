@@ -13,7 +13,7 @@ const LoginForm = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async(data) => {
-    dispatch(logIn(data,navigate,dispatch));
+    dispatch(logIn(data,navigate));
   }
 
   useEffect(() => {

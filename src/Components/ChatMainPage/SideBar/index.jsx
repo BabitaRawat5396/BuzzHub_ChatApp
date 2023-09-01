@@ -33,7 +33,6 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const outsideSideBarClick = useRef();
-  const [showFullImage, setShowFullImage] = useState(false);
 
 
   const fetchSearchedData = async(value) => {

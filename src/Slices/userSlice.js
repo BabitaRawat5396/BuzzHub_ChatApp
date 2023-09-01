@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
+  loading:false,
   showUserChat: null,
   notification: [],
   showSideBar:true,
@@ -34,12 +35,15 @@ const userSlice = createSlice({
     },
     setShowUserProfile(state,value){
       state.showUserProfile = value.payload;
+    },
+    setLoading(state,value){
+      state.loading = value.payload;
     }
   }
 });
 
 
-export const { setUser, setShowContactInfo, setShowUserChat, setNotification, setShowSideBar, setRefreshSideBar, setShowUserProfile } = userSlice.actions;
+export const { setUser, setLoading, setShowContactInfo, setShowUserChat, setNotification, setShowSideBar, setRefreshSideBar, setShowUserProfile } = userSlice.actions;
 
 export default userSlice.reducer;
 
