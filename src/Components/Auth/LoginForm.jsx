@@ -13,9 +13,9 @@ const LoginForm = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async(data) => {
-    dispatch(logIn(data,navigate));
+    dispatch(logIn(data,navigate,dispatch));
   }
-  
+
   useEffect(() => {
     if(isSubmitSuccessful){
       reset({

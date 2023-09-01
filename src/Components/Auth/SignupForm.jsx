@@ -22,12 +22,12 @@ const SignupForm = ({setIsSignUpMode}) => {
     formData.append("userName", data.userName);
     formData.append("email", data.email);
     formData.append("password", data.password);
-    dispatch(signUp(formData,navigate)).then(()=>{
+    dispatch(signUp(formData,dispatch)).then(()=>{
       setIsSignUpMode(false);
     });
     setPreview(false);
   }
-  
+
   useEffect(() => {
     if(isSubmitSuccessful){
       reset({

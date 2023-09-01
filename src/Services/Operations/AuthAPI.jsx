@@ -1,9 +1,10 @@
 
+
+import { setLoading, setToken } from "../../Slices/authSlice";
 import { setUser } from "../../Slices/userSlice";
 import { apiConnector } from "../apiConnector";
 import { toast } from "react-hot-toast";
 import { authEndPoints } from "../api";
-import { setToken } from "../../Slices/authSlice";
 
 const {
   SIGNIN_API,
@@ -11,9 +12,9 @@ const {
 } = authEndPoints;
 
 
-export function signUp(data) {
+export function signUp(data,dispatch) {
   return async () => {
-    // dispatch(setLoading(true))
+    dispatch(setLoading(true))
     try {
       const response = await apiConnector("POST", SIGNUP_API,data);
 
@@ -27,13 +28,13 @@ export function signUp(data) {
       console.log("SIGNUP API ERROR............", error)
       toast.error("Signup Failed")
     }
-    // dispatch(setLoading(false));
+    dispatch(setLoading(false));
   }
 }
 
-export function logIn(data,navigate) {
-  return async (dispatch) => {
-    // dispatch(setLoading(true))
+export function logIn(data,navigate,dispatch) {
+  return async () => {
+    dispatch(setLoading(true))
     try {
       const response = await apiConnector("POST", SIGNIN_API,data);
 
@@ -53,6 +54,6 @@ export function logIn(data,navigate) {
       console.log("LOGIN API ERROR............", error);
       toast.error("LOGIN Failed");
     }
-    // dispatch(setLoading(false));
+    dispatch(setLoading(false));
   }
 }

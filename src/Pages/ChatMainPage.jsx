@@ -3,15 +3,28 @@ import { useSelector } from 'react-redux'
 import ChatRoom from '../Components/ChatMainPage/ChatRoom'
 import Sidebar from '../Components/ChatMainPage/SideBar'
 import useWindowSize from '../Hooks/windowSize'
+import { ColorRing } from 'react-loader-spinner'
 
 const ChatMainPage = () => {
 
   const {showUserChat, showSideBar} = useSelector((state) => state.profile)
+  const {loading} = useSelector((state) => state.auth)
+
   const windowSize = useWindowSize();
 
   return (
     <div className='min-h-screen flex w-full bg-[#f0f2f5] bg-opacity-30'>
-      {
+    {
+      loading ? 
+        <ColorRing
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="blocks-loading"
+          wrapperStyle={{}}
+          wrapperClass="blocks-wrapper"
+          colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+        /> : (
         windowSize.width < 427 ? (
           !showUserChat ? (
             <div className='bg-[#7c799a] w-full'>
@@ -43,10 +56,10 @@ const ChatMainPage = () => {
           </div>
         )
         )
-      }
-      
+      )
+    }
     </div>
-  )
+  );
 }
 
 export default ChatMainPage
