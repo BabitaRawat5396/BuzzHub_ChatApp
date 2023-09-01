@@ -83,8 +83,8 @@ const Sidebar = () => {
   })
 
   return (
-  <>
-    <div className='flex flex-col items-center justify-center'  ref={outsideSideBarClick}>
+  <div ref={outsideSideBarClick}>
+    <div className='flex flex-col items-center justify-center'>
       <div className='flex items-center justify-between w-full px-4 border-b border-white border-opacity-20'>
         <div className='flex items-center whitespace-nowrap text-lg font-bold w-full p-2'>
           <img
@@ -153,7 +153,7 @@ const Sidebar = () => {
         <ContactInfo/>
       </div>
     }
-  </>
+  </div>
     
     
   )

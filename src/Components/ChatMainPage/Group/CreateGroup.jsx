@@ -4,6 +4,7 @@ import SearchUsersToAdd from './SearchUsersToAdd';
 import {GiCrossMark} from 'react-icons/gi';
 import { useDispatch, useSelector } from 'react-redux';
 import { createGroupChat } from '../../../Services/Operations/ChatAPI';
+import { setRefreshSideBar, setShowUserChat } from '../../../Slices/userSlice';
 
 
 const CreateGroup = ({setShowCreateGroup}) => {
@@ -13,13 +14,16 @@ const CreateGroup = ({setShowCreateGroup}) => {
   const dispatch = useDispatch();
 
 
-  const createGroup = (data) => {
+  const createGroup = async(data) => {
     const formData = new FormData();
     formData.append("name",data.groupName);
     formData.append("users",JSON.stringify(data.selectedUsers));
-    dispatch(createGroupChat(formData,token));
+    const response = await createGroupChat(formData,token)
+    setShowCreateGroup(false);
+    dispatch(setShowUserChat(response));
+    dispatch(setRefreshSideBar(response));
   }
-
+  
   return (
     <div className='fixed inset-0 z-[1000] !mt-0 grid place-items-center overflow-auto bg-opacity-10 backdrop-blur-sm'>
       <div className='bg-[#ecacb9] w-10/12 tablet-sm:w-8/12 tablet:w-6/12 tablet-md:w-5/12 blur-background p-5 rounded-2xl text-[#7c799a]'>

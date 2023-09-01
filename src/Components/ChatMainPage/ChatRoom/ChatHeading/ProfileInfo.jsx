@@ -9,12 +9,11 @@ const ProfileInfo = () => {
   const dispatch = useDispatch();
 
   const handleDeleteChat = async() => {
-    // console.log("showUserChat",showUserChat);
     const response = await deleteChat({
       userId:showUserChat?.users[0]._id === user._id ? showUserChat?.users[1]?._id  : showUserChat?.users[0]?._id,
       isGroupChat:showUserChat?.isGroupChat,
-      token
-    })
+      chatId:showUserChat._id
+    },token)
     dispatch(setRefreshSideBar(response))
     dispatch(setShowUserChat(null))
     dispatch(setShowSideBar(true));

@@ -35,9 +35,11 @@ const UsersDisplay = () => {
   },[]);
 
   const truncateWords = (text, maxWords) => {
-    const words = text.split(' ');
-    const truncatedText = words.slice(0, maxWords).join(' ');
-    return truncatedText + (words.length > maxWords ? ' ...' : '');
+    if(text){
+      const words = text.split(' ');
+      const truncatedText = words.slice(0, maxWords).join(' ');
+      return truncatedText + (words.length > maxWords ? ' ...' : '');
+    }
   };
 
   
@@ -71,7 +73,7 @@ const UsersDisplay = () => {
                     <div className='flex justify-between items-center'>
                       <div>
                         <p className='text-white'>{item?.chatName}</p>
-                        <p className='text-xs text-slate-600'><span className=' font-bold text-slate-700'>{item?.latestMessage?.sender?.userName}</span>: {truncateWords(item?.latestMessage?.content, 6)}</p>
+                        <p className='text-xs text-slate-600'><span className=' font-bold text-slate-700'>{item?.latestMessage?.sender?.userName}</span>{item?.latestMessage?.content && ":"} {truncateWords(item?.latestMessage?.content, 6)}</p>
                       </div>
                       <p className='whitespace-nowrap text-xs text-slate-600'>{item?.latestMessage?.createdAt && formatTimestamp(item?.latestMessage?.createdAt)}</p>
                     </div>

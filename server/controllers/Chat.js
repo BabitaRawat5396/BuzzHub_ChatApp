@@ -90,15 +90,17 @@ exports.fetchUserAllChats = async(req,res) => {
     // console.log("userChat",userChat)
     const filteredUserChat = userChat.filter(chat => {
       // Check if chat.latestMessage exists and is not null or undefined
-      if (chat.latestMessage) {
-        if (chat.isGroupChat) {
-          return !chat.deleteChatUsers.some(id => id.toString() === req.user.id.toString());
-        } else {
-          // Check if there is any ID in deleteChatUsers array other than req.user.id
+      
+      if (chat.isGroupChat) {
+        return !chat.deleteChatUsers.some(id => id.toString() === req.user.id.toString());
+      } else {
+        // Check if there is any ID in deleteChatUsers array other than req.user.id
+        if (chat.latestMessage) {
           return !chat.deleteChatUsers.some(id => id.toString() !== req.user.id.toString());
         }
+        return false; // Exclude chats without latestMessage
+
       }
-      return false; // Exclude chats without latestMessage
     });
     
     return res.status(200).json({
@@ -118,7 +120,7 @@ exports.fetchUserAllChats = async(req,res) => {
 
 exports.deleteChat = async(req,res) => {
   try {
-    const {userId,isGroupChat} = req.body;
+    const {userId,isGroupChat,chatId} = req.body;
 
     if(!userId){
       return res.status(404).json({
@@ -141,13 +143,7 @@ exports.deleteChat = async(req,res) => {
       },
       { new: true })
     }else{
-      chat = await Chat.findOneAndUpdate({
-        isGroupChat:isGroupChat,
-        $and:[
-          {users:{$elemMatch: {$eq: req.user.id}}},
-          {users:{$elemMatch: {$eq: userId}}},
-        ],
-      },
+      chat = await Chat.findByIdAndUpdate(chatId,
       {
         $push: { deleteChatUsers: req.user.id },
       },
@@ -215,8 +211,16 @@ exports.createGroupChat = async(req,res) => {
    });
 
     const fullGroupChat = await Chat.findOne({_id:groupChat._id})
-      .populate("users","-password")
-      .populate("groupAdmin","-password");
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password")
+    .populate("groupImage")
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "sender",
+        select: "userName email image",
+      },
+    });
    
     return res.status(200).json({
       success:true,

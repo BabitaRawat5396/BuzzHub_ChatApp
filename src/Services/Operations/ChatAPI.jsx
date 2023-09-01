@@ -33,23 +33,23 @@ export const accessChat = async(userId,token) => {
   return data;
 }
 
-export const deleteChat = async(userId,token) => {
-  let data = [];
+export const deleteChat = async(data,token) => {
+  let user = [];
   try {
-    const response = await apiConnector("POST",DELETE_CHAT_API,userId,{
+    const response = await apiConnector("POST",DELETE_CHAT_API,data,{
       Authorization:`Bearer ${token}`
     });
 
     if(!response.data.success){
       throw new Error(response.data.message);
     }
-    data = response.data.data;
+    user = response.data.data;
     console.log("DELETE_CHAT_API RESPONSE",response);
 
   } catch (error) {
     console.log("DELETE_CHAT_API ERROR",error);
   }
-  return data;
+  return user;
 }
 
 export const fetchUsersAllChats = async(token) => {
@@ -63,7 +63,7 @@ export const fetchUsersAllChats = async(token) => {
       throw new Error(response.data.message);
     }
 
-    // console.log("FETCH_USER_ALL_CHATS_API RESPONSE",response);
+    console.log("FETCH_USER_ALL_CHATS_API RESPONSE",response);
     users = response.data.data;
 
   } catch (error) {
@@ -73,24 +73,24 @@ export const fetchUsersAllChats = async(token) => {
   return users;
 }
 
-export function createGroupChat(data,token){
-  return async() => {
-    try {
-      const response = await apiConnector("POST",CREATE_GROUP_CHAT_API,data,{
-        Authorization:`Bearer ${token}`
-      });
+export const createGroupChat = async(data,token) => {
+  let user;
+  try {
+    const response = await apiConnector("POST",CREATE_GROUP_CHAT_API,data,{
+      Authorization:`Bearer ${token}`
+    });
 
-      if(!response.data.success){
-        throw new Error(response.data.message);
-      }
-      console.log("CREATE_GROUP_CHAT_API RESPONSE",response);
-
-    } catch (error) {
-      console.log("CREATE_GROUP_CHAT_API ERROR",error);
-      toast.error(error.response.data.message)
-      
+    if(!response.data.success){
+      throw new Error(response.data.message);
     }
+    console.log("CREATE_GROUP_CHAT_API RESPONSE",response);
+    user = response.data.data;
+  } catch (error) {
+    console.log("CREATE_GROUP_CHAT_API ERROR",error);
+    toast.error(error.response.data.message)
   }
+
+  return user;
 }
 
 export const renameGroup = async(data,token) => {
