@@ -101,7 +101,7 @@ const ChatRoom = () => {
   },[showUserChat]);
 
   useEffect(() => {
-    socket.current = io("https://buzzhub-backend.onrender.com");
+    socket.current = io("http://localhost:4000");
     socket.current.emit("setup",user);
     socket.current.on("connected",() => setSocketConnected(true));
     socket.current.on("typing",() => setIsTyping(true));

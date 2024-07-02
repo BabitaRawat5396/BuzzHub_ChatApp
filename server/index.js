@@ -44,6 +44,12 @@ app.use( cors({
 })
 );
 
+// app.use( cors({
+// 	origin:"http://localhost:3000",
+// 	credentials:true,
+// })
+// );
+
 // middleware for uploading using temp file
 app.use(
 	fileUpload({
@@ -76,9 +82,9 @@ const server = app.listen(PORT, () => {
 
 // Socket Connection
 const io = socket(server,{
-	pingTimeout: 60000, //It will wait for 60s after that it will close connectuon to save the bandwidth
+	pingTimeout: 60000, //It will wait for 60s after that it will close connection to save the bandwidth
 	cors:{
-		origin:"https://buzzhub-frontend.vercel.app",
+		origin:"http://localhost:3000",
 		credentials:true,
 	},
 });
